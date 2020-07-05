@@ -12,7 +12,7 @@
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 from game import Agent
-from searchProblems import PositionSearchProblem,mazeDistance
+from searchProblems import PositionSearchProblem, mazeDistance
 
 import util
 import time
@@ -23,50 +23,22 @@ IMPORTANT
 `agent` defines which agent you will use. By default, it is set to ClosestDotAgent,
 but when you're ready to test your own agent, replace it with MyAgent
 """
-def createAgents(num_pacmen, agent='ClosestDotAgent'):
+
+
+def createAgents(num_pacmen, agent='MyAgent'):
     return [eval(agent)(index=i) for i in range(num_pacmen)]
+
 
 class MyAgent(Agent):
     """
     Implementation of your agent.
     """
-    def getAction(self, state):
-        """
-        Returns the next action the agent will take
-        """
-        "*** YOUR CODE HERE ***"
-        raise NotImplementedError()
 
-    def initialize(self):
+    def getAction(self, gameState):
         """
-        Intialize anything you want to here. This function is called
-        when the agent is first created. If you don't need to use it, then
-        leave it blank
-        """
-
-        "*** YOUR CODE HERE"
-
-        raise NotImplementedError()
-
-"""
-Put any other SearchProblems or search methods below. You may also import classes/methods in
-search.py and searchProblems.py. (ClosestDotAgent as an example below)
-"""
-
-class ClosestDotAgent(Agent):
-
-    def nullHeuristic(state, problem=None):
-        """
-        Heuristicka funkcija procenjuje cenu od trenutnog stanja do najblizeg sledeceg stanja u prostoru pretrage.
-        Ova heuristika je trivijalna.
-        """
-        return 0
-
-    def findPathToClosestDot(self, gameState, heuristic=nullHeuristic):
-        """
-        Returns a path (a list of actions) to the closest dot, starting from
-        gameState.
-        """
+             Returns a path (a list of actions) to the closest dot, starting from
+             gameState.
+             """
         # Here are some useful elements of the startState
         startPosition = gameState.getPacmanPosition(self.index)
         startState = gameState.getPacmanState(self.index)
@@ -80,47 +52,65 @@ class ClosestDotAgent(Agent):
             if pos != startPosition:
                 agent_positions.append(pos)
         bfsa = search.bfs(problem, agent_positions)
-        #path,current_state = search.astar(problem,agent_positions,search.nullHeuristic)
-       # distance = mazeDistance(startState.getPosition(),current_state,gameState,agent_positions)#
-        #if distance > 10:
-           #path = ['Stop']
-        # print("Distanca",distance)
-        #print(len(bfsa))
-        return bfsa
-        # return bfsa
+        # astar = search.astar(startPosition, problem, agent_positions, search.euclideanHeuristic)
+        # return astar
+        return bfsa[0]
+
+    def initialize(self):
+        """
+        Intialize anything you want to here. This function is called
+        when the agent is first created. If you don't need to use it, then
+        leave it blank
+        """
+
+        return 0
 
 
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+"""
+Put any other SearchProblems or search methods below. You may also import classes/methods in
+search.py and searchProblems.py. (ClosestDotAgent as an example below)
+"""
+
+
+class ClosestDotAgent(Agent):
+
+    def findPathToClosestDot(self, gameState):
+        return 0
 
     def getAction(self, state):
         return self.findPathToClosestDot(state)[0]
 
+
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
     A search problem for finding a path to any food.
+
     This search problem is just like the PositionSearchProblem, but has a
     different goal test, which you need to fill in below.  The state space and
     successor function do not need to be changed.
+
     The class definition above, AnyFoodSearchProblem(PositionSearchProblem),
     inherits the methods of the PositionSearchProblem.
+
     You can use this search problem to help you fill in the findPathToClosestDot
     method.
     """
+
     def __init__(self, gameState, agentIndex):
         "Stores information from the gameState.  You don't need to change this."
         # Store the food for later reference
         self.food = gameState.getFood()
+
         # Store info for the PositionSearchProblem (no need to change this)
         self.walls = gameState.getWalls()
         self.startState = gameState.getPacmanPosition(agentIndex)
         self.costFn = lambda x: 1
-        self._visited, self._visitedlist, self._expanded = {}, [], 0 # DO NOT CHANGE
+        self._visited, self._visitedlist, self._expanded = {}, [], 0  # DO NOT CHANGE
 
     def isGoalState(self, state):
         """
-        The state is Pacman's position. Fill this in with a goal test
-        that will complete the problem definition.
+        The state is Pacman's position. Fill this in with a goal test that will
+        complete the problem definition.
         """
         x, y = state
         food = self.food
@@ -128,6 +118,3 @@ class AnyFoodSearchProblem(PositionSearchProblem):
             return True
         else:
             return False
-
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()

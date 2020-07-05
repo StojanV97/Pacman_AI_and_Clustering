@@ -113,7 +113,7 @@ def depthFirstSearch(problem):
 
 def breadthFirstSearch(problem,agentPositions):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
+
     queue = util.Queue()
     queue.push((problem.getStartState(), [], list()))
     while not queue.isEmpty():
@@ -130,7 +130,7 @@ def breadthFirstSearch(problem,agentPositions):
             else:
                 n_actions = path + [direction]
                 queue.push((coord, n_actions, visited))
-    return []
+    return ['Stop']
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
