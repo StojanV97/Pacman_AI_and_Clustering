@@ -16,8 +16,10 @@
 In search.py, you will implement generic search algorithms which are called by
 Pacman agents (in searchAgents.py).
 """
+import copy
 
 import util
+
 
 class SearchProblem:
     """
@@ -70,7 +72,8 @@ def tinyMazeSearch(problem):
     from game import Directions
     s = Directions.SOUTH
     w = Directions.WEST
-    return  [s, s, w, s, w, w, s, w]
+    return [s, s, w, s, w, w, s, w]
+
 
 def depthFirstSearch(problem):
     """
@@ -87,17 +90,58 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    """
+       :param problem: struktura stanja
+       :param data_structure: struktura podataka koja se koristi (Stack, Queue, ...)
+       :return: pravci kretanja i cene
+       """
+    stack = util.Stack()
+    stack.push((problem.getStartState(), [], list()))
+    while not stack.isEmpty():
+        current_state, path, visited = stack.pop()
+        if current_state in visited: continue
+        if problem.isGoalState(current_state):
+            return path
+        visited.append(current_state)
+        for coord, direction, _ in problem.getSuccessors(current_state):
+            n_actions = path + [direction]
+            stack.push((coord, n_actions, visited))
+    return []
 
-def breadthFirstSearch(problem):
+
+
+
+def breadthFirstSearch(problem,agentPositions):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    queue = util.Queue()
+    queue.push((problem.getStartState(), [], list()))
+    while not queue.isEmpty():
+        current_state, path, visited = queue.pop()
+        if current_state in visited: continue
+        if problem.isGoalState(current_state):
+            return path
+        visited.append(current_state)
+        for coord, direction, _ in problem.getSuccessors(current_state):
+            # Proverava da li su koordinate naslednika agent ili nesto drugo
+            # Ukoliko nije agent onda ce dodati te koordinate u putanju i time izbeci kretanje agenta u istom smeru
+            if (coord in agentPositions):
+                continue
+            else:
+                n_actions = path + [direction]
+                queue.push((coord, n_actions, visited))
+    return []
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
+
+def euclideanHeuristic(position, problem, info={}):
+    "The Euclidean distance heuristic for a PositionSearchProblem"
+    xy1 = position
+    xy2 = problem.goal
+    return ( (xy1[0] - xy2[0]) ** 2 + (xy1[1] - xy2[1]) ** 2 ) ** 0.5
 
 def nullHeuristic(state, problem=None):
     """
@@ -106,10 +150,38 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
-def aStarSearch(problem, heuristic=nullHeuristic):
+def manhattanHeuristic(self,position,problem):
+        "The Manhattan distance heuristic for a PositionSearchProblem"
+        "The Manhattan distance heuristic for a PositionSearchProblem"
+        xy1 = position
+        xy2 = problem.goal
+        return abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])
+
+
+def aStarSearch(problem,agentPositions, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    priorityQueue = util.PriorityQueue()
+    priorityQueue.push((problem.getStartState(), [], list()), 0)
+    while not priorityQueue.isEmpty():
+        current_state, path, visited = priorityQueue.pop()
+        if current_state in visited: continue
+        if problem.isGoalState(current_state):
+            return path,current_state
+        visited.append(current_state)
+        for coord, direction, _ in problem.getSuccessors(current_state):
+            #Proverava da li su koordinate naslednika agent ili nesto drugo
+            #Ukoliko nije agent onda ce dodati te koordinate u putanju i time izbeci kretanje agenta u istom smeru
+            #if(coord in agentPositions):
+             #   continue
+          #  else:
+                n_actions = path + [direction]
+                # cost = problem.getCostOfActions(n_actions)
+                cost = problem.getCostOfActions(n_actions) + heuristic(coord, problem)
+                priorityQueue.push((coord, n_actions, visited), cost)
+
+
+    return []
 
 
 # Abbreviations
