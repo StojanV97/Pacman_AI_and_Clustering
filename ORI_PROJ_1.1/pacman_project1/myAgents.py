@@ -12,7 +12,7 @@
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 from game import Agent
-from searchProblems import PositionSearchProblem
+from searchProblems import PositionSearchProblem,mazeDistance
 
 import util
 import time
@@ -65,13 +65,25 @@ class ClosestDotAgent(Agent):
         """
         # Here are some useful elements of the startState
         startPosition = gameState.getPacmanPosition(self.index)
+        startState = gameState.getPacmanState(self.index)
         food = gameState.getFood()
         walls = gameState.getWalls()
         problem = AnyFoodSearchProblem(gameState, self.index)
-
-
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        states_of_agents = gameState.getPacmanStates()
+        all_positions = gameState.getPacmanPositions()
+        agent_positions = []
+        for pos in all_positions:
+            if pos != startPosition:
+                agent_positions.append(pos)
+        bfsa = search.bfs(problem, agent_positions)
+        #path,current_state = search.astar(problem,agent_positions,search.nullHeuristic)
+       # distance = mazeDistance(startState.getPosition(),current_state,gameState,agent_positions)#
+        #if distance > 10:
+           #path = ['Stop']
+        # print("Distanca",distance)
+        #print(len(bfsa))
+        return bfsa
+        # return bfsa
 
     def getAction(self, state):
         return self.findPathToClosestDot(state)[0]
@@ -107,8 +119,11 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         The state is Pacman's position. Fill this in with a goal test that will
         complete the problem definition.
         """
-        x,y = state
+        x, y = state
+        food = self.food
+        if food[x][y]:
+            return True
+        else:
+            return False
 
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
 
