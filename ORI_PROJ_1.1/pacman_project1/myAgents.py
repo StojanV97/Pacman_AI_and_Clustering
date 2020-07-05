@@ -30,14 +30,11 @@ class MyAgent(Agent):
     """
     Implementation of your agent.
     """
-
     def getAction(self, state):
         """
         Returns the next action the agent will take
         """
-
         "*** YOUR CODE HERE ***"
-
         raise NotImplementedError()
 
     def initialize(self):
@@ -58,7 +55,14 @@ search.py and searchProblems.py. (ClosestDotAgent as an example below)
 
 class ClosestDotAgent(Agent):
 
-    def findPathToClosestDot(self, gameState):
+    def nullHeuristic(state, problem=None):
+        """
+        Heuristicka funkcija procenjuje cenu od trenutnog stanja do najblizeg sledeceg stanja u prostoru pretrage.
+        Ova heuristika je trivijalna.
+        """
+        return 0
+
+    def findPathToClosestDot(self, gameState, heuristic=nullHeuristic):
         """
         Returns a path (a list of actions) to the closest dot, starting from
         gameState.
@@ -85,29 +89,28 @@ class ClosestDotAgent(Agent):
         return bfsa
         # return bfsa
 
+
+        "*** YOUR CODE HERE ***"
+        util.raiseNotDefined()
+
     def getAction(self, state):
         return self.findPathToClosestDot(state)[0]
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
     A search problem for finding a path to any food.
-
     This search problem is just like the PositionSearchProblem, but has a
     different goal test, which you need to fill in below.  The state space and
     successor function do not need to be changed.
-
     The class definition above, AnyFoodSearchProblem(PositionSearchProblem),
     inherits the methods of the PositionSearchProblem.
-
     You can use this search problem to help you fill in the findPathToClosestDot
     method.
     """
-
     def __init__(self, gameState, agentIndex):
         "Stores information from the gameState.  You don't need to change this."
         # Store the food for later reference
         self.food = gameState.getFood()
-
         # Store info for the PositionSearchProblem (no need to change this)
         self.walls = gameState.getWalls()
         self.startState = gameState.getPacmanPosition(agentIndex)
@@ -116,8 +119,8 @@ class AnyFoodSearchProblem(PositionSearchProblem):
 
     def isGoalState(self, state):
         """
-        The state is Pacman's position. Fill this in with a goal test that will
-        complete the problem definition.
+        The state is Pacman's position. Fill this in with a goal test
+        that will complete the problem definition.
         """
         x, y = state
         food = self.food
@@ -126,4 +129,5 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         else:
             return False
 
-
+        "*** YOUR CODE HERE ***"
+        util.raiseNotDefined()

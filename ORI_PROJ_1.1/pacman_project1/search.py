@@ -134,14 +134,16 @@ def breadthFirstSearch(problem,agentPositions):
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
 
-def euclideanHeuristic(position, problem, info={}):
-    "The Euclidean distance heuristic for a PositionSearchProblem"
+def euclideanHeuristic(position, current_state, info={}):
+    """The Euclidean distance heuristic for a PositionSearchProblem"""
     xy1 = position
-    xy2 = problem.goal
-    return ( (xy1[0] - xy2[0]) ** 2 + (xy1[1] - xy2[1]) ** 2 ) ** 0.5
+    xy2 = current_state
+    cost = ((xy1[0] - xy2[0]) ** 2 + (xy1[1] - xy2[1]) ** 2) ** 0.5
+
+    return cost
+
 
 def nullHeuristic(state, problem=None):
     """
@@ -150,38 +152,45 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
-def manhattanHeuristic(self,position,problem):
-        "The Manhattan distance heuristic for a PositionSearchProblem"
-        "The Manhattan distance heuristic for a PositionSearchProblem"
-        xy1 = position
-        xy2 = problem.goal
-        return abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])
+
+def manhattanHeuristic(self, position, current_state):
+    "The Manhattan distance heuristic for a PositionSearchProblem"
+    xy1 = position
+    xy2 = current_state
+    print(xy1, xy2)
+    return abs(xy1[0] - xy2[0]) + abs(xy1[1] - xy2[1])
 
 
-def aStarSearch(problem,agentPositions, heuristic=nullHeuristic):
+def aStarSearch(startPosition, problem, agentPositions, heuristic=euclideanHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
+
+    startPosition = startPosition
     priorityQueue = util.PriorityQueue()
     priorityQueue.push((problem.getStartState(), [], list()), 0)
     while not priorityQueue.isEmpty():
+
         current_state, path, visited = priorityQueue.pop()
-        if current_state in visited: continue
+        if current_state in visited:
+            continue
+
         if problem.isGoalState(current_state):
-            return path,current_state
+
+            return path
+
         visited.append(current_state)
         for coord, direction, _ in problem.getSuccessors(current_state):
-            #Proverava da li su koordinate naslednika agent ili nesto drugo
-            #Ukoliko nije agent onda ce dodati te koordinate u putanju i time izbeci kretanje agenta u istom smeru
-            #if(coord in agentPositions):
-             #   continue
-          #  else:
+            # Proverava da li su koordinate naslednika agent ili nesto drugo
+            # Ukoliko nije agent onda ce dodati te koordinate u putanju i time izbeci kretanje agenta u istom smeru
+
+            if coord in agentPositions:
+                continue
+            else:
+
                 n_actions = path + [direction]
-                # cost = problem.getCostOfActions(n_actions)
-                cost = problem.getCostOfActions(n_actions) + heuristic(coord, problem)
+                cost = problem.getCostOfActions(n_actions) + heuristic(startPosition, current_state)
                 priorityQueue.push((coord, n_actions, visited), cost)
 
-
-    return []
+    return ['Stop']
 
 
 # Abbreviations
