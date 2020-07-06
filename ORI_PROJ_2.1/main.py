@@ -33,9 +33,9 @@ sum_of_squared_dist = []
 ks = range(1,15)
 for k in ks:
     kmeans = KMeans(n_clusters=k)
-    kmeans = kmeans.fit(featuresscaled)
+    kmeans = kmeans.fit(features_scaled)
     # km.inertia provides average distances from points to centers of clusters.
-    sum_of_squareddist.append(kmeans.inertia)
+    sum_of_squared_dist.append(kmeans.inertia_)
 
 # Plot the list of number of clusters against sum_of_squared_dist
 plt.plot(ks, sum_of_squared_dist, 'bx-')
@@ -67,3 +67,10 @@ print(cluster_2.describe())
 print('############## CLUSTER 3 ##############')
 print(cluster_3.describe())
 
+pca = PCA(n_components=2)
+data_in_2d = pca.fit_transform(features_inversed)
+credit_cards_2d = pd.DataFrame()
+color_map = {0 : 'r', 1 : 'b', 2 : 'g'}
+label_color = [color_map[i] for i in y_kmeans]
+plt.scatter(data_in_2d[:,0], data_in_2d[:,1], c=label_color)
+plt.show()
