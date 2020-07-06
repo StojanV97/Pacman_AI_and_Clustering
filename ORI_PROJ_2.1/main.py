@@ -43,3 +43,27 @@ plt.xlabel('Number of clusters')
 plt.ylabel('Sum_of_squared_distances')
 plt.title('Elbow Method For Optimal Number of Clusters')
 plt.show()
+
+
+kmeans = KMeans(n_clusters=3)
+y_kmeans = kmeans.fit_predict(features_scaled)
+
+#
+credit_cards['CLUSTER_ID'] = y_kmeans
+print(credit_cards.head())
+
+features_inversed = mms.inverse_transform(features_scaled)
+credit_cards.iloc[:, 1: -1] = features_inversed
+cluster_1 = credit_cards[credit_cards.CLUSTER_ID == 0]
+cluster_2 = credit_cards[credit_cards.CLUSTER_ID == 1]
+cluster_3 = credit_cards[credit_cards.CLUSTER_ID == 2]
+
+print('############## CLUSTER 1 ##############')
+print(cluster_1.describe())
+
+print('############## CLUSTER 2 ##############')
+print(cluster_2.describe())
+
+print('############## CLUSTER 3 ##############')
+print(cluster_3.describe())
+
