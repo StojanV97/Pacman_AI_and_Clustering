@@ -3,6 +3,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA, KernelPCA
+
 pd.set_option('display.max_columns', 25)
 
 # Read csv file into dataframe object
