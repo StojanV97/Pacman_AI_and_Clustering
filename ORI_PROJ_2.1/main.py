@@ -1,36 +1,45 @@
 import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
 from sklearn.cluster import KMeans
-from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
-import sys
+from sklearn.decomposition import PCA, KernelPCA
+pd.set_option('display.max_columns', 25)
 
-def load_data():
-    df = pd.read_csv(sys.argv[2])
-    return df
+# Read csv file into dataframe object
+credit_cards = pd.read_csv('credit_card_data.csv')
+credit_cards = credit_cards.dropna(how='any', axis=0)
 
+# Print first five rows
+print(credit_cards.head())
 
-if __name__ == '__main__':
-    df = load_data()
+# From the following line, we can see that features are on different scale
+print(credit_cards.max())
 
-    # Izbacujemo CUST_ID kolonu, jer sadrzi tekstualne vrednosti koje nisu od znacaja za model
-    df = df.drop("CUST_ID", axis='columns')
+# Initialize the Scaler object that scales all features to [0,1] of the dataframe. Why? In order for all of them to have equal
+# importance during clusterization (during calculating pairwise distances)
+mms = MinMaxScaler()
 
-    # Funkcija koja izbacuje sve redove koje sadrze NaN vrednost u nekom polju
-    df = df.dropna()
+# Transform all features except CUST_ID because it is a string
+features_scaled = mms.fit_transform(credit_cards.iloc[:,1:])
 
-    # -------------------------------------- DATA LOADED FULLY ---------------------------------------- #
+# Replace all transformed features with their scaled versions
+credit_cards.iloc[:,1:] = features_scaled
 
+# Print first five rows to see the transformation
+print(credit_cards.head())
 
-    #scaler = StandardScaler()
-    #df_norm = pd.DataFrame(scaler.fit_transform(df.astype(float)))
+# From this for loop, we determine the optimal number of clusters by the so-called elbow method
+sum_of_squared_dist = []
+ks = range(1,15)
+for k in ks:
+    kmeans = KMeans(n_clusters=k)
+    kmeans = kmeans.fit(featuresscaled)
+    # km.inertia provides average distances from points to centers of clusters.
+    sum_of_squareddist.append(kmeans.inertia)
 
-
-    #kmeans = KMeans(n_clusters=2, max_iter=100)
-    #kmeans.fit(df)
-
-    # type(balance) = pandas.core.series.Series
-    balance = df["BALANCE"]
-    purchases = df["PURCHASES"]
-
-    plt.scatter(balance, purchases)
-    plt.show()
+# Plot the list of number of clusters against sum_of_squared_dist
+plt.plot(ks, sum_of_squared_dist, 'bx-')
+plt.xlabel('Number of clusters')
+plt.ylabel('Sum_of_squared_distances')
+plt.title('Elbow Method For Optimal Number of Clusters')
+plt.show()
