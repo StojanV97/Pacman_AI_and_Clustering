@@ -1,0 +1,11 @@
+*Cluster 1 :
+Na osnovu najmanje vrednosti kupovina(Purchases), prosecnog limita kreditne kartice (Credit_Limit
+ i jako male ucestalosti kupovina mozemo zakljuciti da klasteru 1 pripada siromasniji sloj drustva i oni koji ne koriste  kreditne kartice za kupovinu
+
+*Cluster 2:
+ Na osnovu najvece srednje vrednosti Balansa(Balance), najvece vrednosti kupovina(Purchases)
+ i najvecEg kreditnog limita(Credit_Limit) moze se zakljuciti da klasteru 2 pripada najbogatiji sloj drustva
+
+*Cluster 3:
+Na osnovu malog balansa (Balance),prosecne vrednosti kupovina(Purchases), prosecnog limita na kartici (Credit_Limit) ali i velikom ucestalosti kupovina (Purchase_Frequency)
+mozemo zakljuciti da je ovo sloj drustva koji ne poseduje puno sredstava ali trosi cesto na manje kupovine karticom
